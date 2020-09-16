@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build Node.js package
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 0 * * 0'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      DATA_FOLDER_NAME: "data"
+      ISOBUSPARAMETER_URL: "https://www.isobus.net/isobus/attachments/isoExport_csv.zip"  
+      ISOBUSPARAMETER_FILENAME: "isoExport_csv.zip"
+      ISOBUSPARAMETER_TARGET_FOLDER: "isoExport"
+      EVENT: ${{ github.event_name }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Cache last isobus parameter file from cache
+        id: cache-parameters
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.DATA_FOLDER_NAME }}/${{ env.ISOBUSPARAMETER_FILENAME }}
+          key: last-isobus-parameters
+
+      - name: Download isobus parameters
+        run: bash ./scripts/download_data.sh
