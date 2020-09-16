@@ -4,13 +4,14 @@
   "description": "translates a ISOBUS name hex string into its components",
   "scripts": {
     "build": "npm run tsc",
-    "tsc": "node ./node_modules/typescript/lib/tsc.js"
+    "tsc": "node ./node_modules/typescript/lib/tsc.js",
+    "translate-iso-export": "node ./scripts/iso-export-to-json.js"
   },
-
   "dependencies": {
     "buffer": "^5.6.0"
   },
   "devDependencies": {
+    "csv-parse": "^4.12.0",
     "typescript": "^4.0.2"
   }
 }
