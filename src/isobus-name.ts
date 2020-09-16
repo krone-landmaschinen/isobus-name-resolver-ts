@@ -1,4 +1,5 @@
 import {Buffer} from 'buffer';
+import * as isoData from './isoData.json';
 
 export class IsobusName {
     private readonly nameString: string;
@@ -17,15 +18,15 @@ export class IsobusName {
 
     public toString(): string {
         let str = 'ISOBUS Name String: ' + this.nameString + '\n';
-        str += 'Device Class: ' + this.getDeviceClass() + '\n';
-        str += 'Manufacturer Code: ' + this.getManufacturerCode() + '\n';
+        str += 'Device Class: ' + this.getDeviceClassLabel() + ' (' + this.getDeviceClass() + ')\n';
+        str += 'Manufacturer Code: ' + this.getManufacturerCodeLabel() + ' ('+this.getManufacturerCode() + ')\n';
         str += 'Identity Number: ' + this.getIdentityNumber() + '\n';
         str += 'ECU Instance: ' + this.getEcuInstance() + '\n';
         str += 'Function Instance: ' + this.getFunctionInstance() + '\n';
-        str += 'Function: ' + this.getFunction() + '\n';
+        str += 'Function: ' + this.getFunctionLabel() + ' (' + this.getFunction() + ')\n';
         str += 'Device Class Instance: ' + this.getDeviceClassInstance() + '\n';
-        str += 'Industry Group: ' + this.getIndustryGroup() + '\n';
-        str += 'Self Configurable Address: ' + this.getSelfConfigurableAddress() + '\n';
+        str += 'Industry Group: ' + this.getIndustryGroupLabel() + ' (' + this.getIndustryGroup() + ')\n';
+        str += 'Self Configurable Address: ' + this.getSelfConfigurableAddressLabel() + '\n';
         return str;
     }
 
@@ -35,11 +36,19 @@ export class IsobusName {
         return byte7 >> 1;
     }
 
+    public getDeviceClassLabel(): string {
+        return isoData.industryGroups?.[this.getIndustryGroup()]?.vehicleSystems?.[this.getDeviceClass()]?.label;
+    }
+
     public getManufacturerCode(): number {
         let byte3 = this.getByte(2);
         let byte4 = this.getByte(3);
 
         return (byte4 << 3) | 0b111 & (byte3 >> 5);
+    }
+
+    public getManufacturerCodeLabel(): string {
+        return isoData.manufacturers?.[this.getManufacturerCode()]?.label;
     }
 
     public getIdentityNumber(): number {
@@ -66,6 +75,16 @@ export class IsobusName {
         return this.getByte(5);
     }
 
+    public getFunctionLabel(): string {
+        if(isoData.independentFunctions.hasOwnProperty(this.getFunction())) {
+            return isoData.independentFunctions[this.getFunction()]?.label;
+        } else {
+            return isoData.industryGroups?.[this.getIndustryGroup()]
+                ?.vehicleSystems?.[this.getDeviceClass()]
+                ?.functions?.[this.getFunction()]?.label;
+        }
+    }
+
     public getDeviceClassInstance(): number {
         let byte8 = this.getByte(7);
 
@@ -78,10 +97,18 @@ export class IsobusName {
         return (byte8 >> 4) & 0b111;
     }
 
+    public getIndustryGroupLabel(): string {
+        return isoData.industryGroups?.[this.getIndustryGroup()]?.label;
+    }
+
     public getSelfConfigurableAddress(): number {
         let byte8 = this.getByte(7);
 
         return (byte8 >> 7) & 0b1;
+    }
+
+    public getSelfConfigurableAddressLabel(): string {
+        return (this.getSelfConfigurableAddress() === 1 ? 'true' : 'false');
     }
 
     public getIsoNameString(): string {
