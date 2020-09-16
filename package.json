@@ -1,0 +1,16 @@
+{
+  "name": "isobus-name-resolver",
+  "version": "0.1.0",
+  "description": "translates a ISOBUS name hex string into its components",
+  "scripts": {
+    "build": "npm run tsc",
+    "tsc": "node ./node_modules/typescript/lib/tsc.js"
+  },
+
+  "dependencies": {
+    "buffer": "^5.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.2"
+  }
+}
