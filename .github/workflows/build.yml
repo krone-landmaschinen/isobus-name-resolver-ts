@@ -89,7 +89,7 @@ jobs:
 
       - name: Publish npm package to registry
         if: ${{ env.NEEDS_REBUILD == 'true' }}
-        run: npm publish   
+        run: npm publish --access public   
 
       - name: Clean workspace
         if: ${{ env.NEEDS_REBUILD == 'true' }}
