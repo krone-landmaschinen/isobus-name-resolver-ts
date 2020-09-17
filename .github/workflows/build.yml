@@ -47,3 +47,14 @@ jobs:
 
       - name: Download isobus parameters
         run: bash ./scripts/download_data.sh
+
+      - name: Install npm dependencies
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        run: npm install   
+
+      - name: Rebuild node package
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        run: npm run build
+
+      - name: Show dist content
+        run: ls -lahR dist/
