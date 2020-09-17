@@ -87,6 +87,10 @@ jobs:
           name: npm-package-artifact
           path: artifacts/
 
+      - name: Publish npm package to registry
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        run: npm publish   
+
       - name: Clean workspace
         if: ${{ env.NEEDS_REBUILD == 'true' }}
         run: git reset --hard
