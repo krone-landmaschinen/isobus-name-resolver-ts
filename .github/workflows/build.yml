@@ -57,4 +57,19 @@ jobs:
         run: npm run build
 
       - name: Show dist content
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
         run: ls -lahR dist/
+
+      - name: Pack a .tar archive
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        run: |
+          mkdir -p artifacts/
+          cd artifacts/
+          npm pack ../
+
+      - name: Upload .tar archive as artifact
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: npm-package-artifact
+          path: artifacts/
