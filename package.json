@@ -1,7 +1,8 @@
 {
-  "name": "isobus-name-resolver",
+  "name": "isobus-name-resolver-ts",
   "description": "Simple tool to parse an isobus name hexstring and split it into its components.",
   "version": "0.2.0",
+  "license": "Apache-2.0",
   "maintainers": [
     {
       "name": "Maschinenfabrik Bernard Krone GmbH & Co. KG",
