@@ -1,5 +1,7 @@
 /node_modules/
 /dist/*
 /.idea/
+/isoExport/*
+!/isoExport/README.md
 
-!/dist/.gitkeep
+!.gitkeep
