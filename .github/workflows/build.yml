@@ -38,6 +38,11 @@ jobs:
           node-version: '12.x'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Setup git config
+        run: |
+          git config --local user.name 'Github Actions'
+          git config --local user.email 'gh-action-bump-version@users.noreply.github.com'
+
       - name: Cache last isobus parameter file from cache
         id: cache-parameters
         uses: actions/cache@v2
@@ -50,7 +55,15 @@ jobs:
 
       - name: Install npm dependencies
         if: ${{ env.NEEDS_REBUILD == 'true' }}
-        run: npm install   
+        run: npm ci
+
+      - name: Increase version number (on automated build)
+        if: ${{ env.NEEDS_REBUILD == 'true' && github.event_name == 'schedule' }}
+        run: npm version patch -m "Upgrade to %s for automated build"   
+
+      - name: Increase version number (on push)
+        if: ${{ env.NEEDS_REBUILD == 'true' && github.event_name == 'push' }}
+        run: npm version minor -m "Upgrade to %s for manual change"   
 
       - name: Rebuild node package
         if: ${{ env.NEEDS_REBUILD == 'true' }}
@@ -73,3 +86,13 @@ jobs:
         with:
           name: npm-package-artifact
           path: artifacts/
+
+      - name: Clean workspace
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        run: git reset --hard
+
+      - name: Push changes
+        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
