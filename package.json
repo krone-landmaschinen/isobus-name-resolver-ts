@@ -18,6 +18,12 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "isobus",
+    "iso11783",
+    "agriculture",
+    "typescript"
+  ],
   "scripts": {
     "build": "npm run translate-iso-export && npm run tsc",
     "tsc": "node ./node_modules/typescript/lib/tsc.js",
