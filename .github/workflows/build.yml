@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       DATA_FOLDER_NAME: "data"
       ISOBUSPARAMETER_URL: "https://www.isobus.net/isobus/attachments/isoExport_csv.zip"  
       ISOBUSPARAMETER_FILENAME: "isoExport_csv.zip"
@@ -36,7 +35,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org/'
 
       - name: Setup git config
         run: |
@@ -89,7 +88,9 @@ jobs:
 
       - name: Publish npm package to registry
         if: ${{ env.NEEDS_REBUILD == 'true' }}
-        run: npm publish --access public   
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: Clean workspace
         if: ${{ env.NEEDS_REBUILD == 'true' }}
