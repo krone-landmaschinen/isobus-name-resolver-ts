@@ -8,11 +8,14 @@
       "web": "https://landmaschinen.krone.de"
     }
   ],
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/krone-landmaschinen/isobus-name-resolver.git"
-    }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krone-landmaschinen/isobus-name-resolver.git"
+  }, 
+  "main": "dist/isobus-name.js",
+  "types": "dist/isobus-name.d.ts",
+  "files": [
+    "dist"
   ],
   "scripts": {
     "build": "npm run translate-iso-export && npm run tsc",
