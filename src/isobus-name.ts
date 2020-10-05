@@ -1,11 +1,17 @@
-import {Buffer} from 'buffer';
+import {Buffer} from 'buffer/';
 import * as isoData from './isoData.json';
 
 export class IsobusName {
     private readonly nameString: string;
     private readonly dataBuffer: Buffer = Buffer.alloc(8);
 
-    constructor(isobusname: string) {
+    constructor(isobusname: string | Buffer) {
+
+        if(Buffer.isBuffer(isobusname)) {
+            isobusname = isobusname.toString('hex');
+        } else if(typeof isobusname === 'object') {
+            throw new TypeError('parameter "isobusname" is not a valid buffer, use https://github.com/feross/buffer');
+        }
         this.nameString = isobusname;
 
         if (this.nameString.match(new RegExp(/^[A-Fa-f0-9]+$/i)) == null || this.nameString.length !== 16) {
