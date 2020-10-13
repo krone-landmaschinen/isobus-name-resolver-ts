@@ -1,6 +1,6 @@
 # isobus-name-resolver-ts
 
-![Build Node.js package](https://github.com/krone-landmaschinen/isobus-name-resolver-ts/workflows/Build%20Node.js%20package/badge.svg)
+![Build Node.js package](https://github.com/krone-landmaschinen/isobus-name-resolver-ts/workflows/Build%20Node.js%20package/badge.svg) ![NPM package version](https://img.shields.io/npm/v/isobus-name-resolver-ts) ![NPM downloads](https://img.shields.io/npm/dt/isobus-name-resolver-ts) ![License](https://img.shields.io/npm/l/isobus-name-resolver-ts)
 
 **The ISOBUS** ([ISO 11783](https://en.wikipedia.org/wiki/ISO_11783)) standard specifies a serial data network
 for control and communications on forestry and agricultural machines. Every control function in an ISOBUS network
@@ -112,6 +112,6 @@ npm run build
 
 The package is automatically built, versioned and published using github actions on the following occasions:
 * A Push on master, e.g when a pull request is merged -> minor version increase
-* Scheduled every week only if the exported ISOBUS parameters changed -> patch version increase
+* Scheduled two times a week (Sundays and Thursdays) only if the exported ISOBUS parameters changed -> patch version increase
 
 The needed isobus.net export is downloaded automatically as well
