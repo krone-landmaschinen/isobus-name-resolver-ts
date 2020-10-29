@@ -1,7 +1,7 @@
 {
   "name": "isobus-name-resolver-ts",
   "description": "Simple tool to parse an isobus name hexstring and split it into its components.",
-  "version": "0.11.4",
+  "version": "0.11.5",
   "license": "Apache-2.0",
   "maintainers": [
     {
