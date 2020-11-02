@@ -40,62 +40,64 @@ jobs:
           git config --local user.name 'Github Actions'
           git config --local user.email 'gh-action-bump-version@users.noreply.github.com'
 
-      - name: Cache last isobus parameter file from cache
-        id: cache-parameters
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.DATA_FOLDER_NAME }}/${{ env.ISOBUSPARAMETER_FILENAME }}
-          key: last-isobus-parameters
-
       - name: Download isobus parameters
         run: bash ./scripts/download_data.sh
 
+      - name: Cache last isobus parameter file from cache
+        env:
+          ISOBUSPARAMETER_FILENAME_FULL: "${{env.DATA_FOLDER_NAME}}/${{env.ISOBUSPARAMETER_FILENAME}}"
+        id: cache-parameters
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.ISOBUSPARAMETER_FILENAME_FULL }}
+          key: last-isobus-parameters-${{ hashFiles(env.ISOBUSPARAMETER_FILENAME_FULL) }}
+
       - name: Install npm dependencies
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         run: npm ci
 
       - name: Increase version number (on automated build)
-        if: ${{ env.NEEDS_REBUILD == 'true' && github.event_name == 'schedule' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' && github.event_name == 'schedule' }}
         run: npm version patch -m "Upgrade to %s for automated build"   
 
       - name: Increase version number (on push)
-        if: ${{ env.NEEDS_REBUILD == 'true' && github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' }}
         run: npm version minor -m "Upgrade to %s for manual change"   
 
       - name: Rebuild node package
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         run: npm run build
 
       - name: Show dist content
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         run: ls -lahR dist/
 
       - name: Pack a .tar archive
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         run: |
           mkdir -p artifacts/
           cd artifacts/
           npm pack ../
 
       - name: Upload .tar archive as artifact
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         uses: actions/upload-artifact@v2
         with:
           name: npm-package-artifact
           path: artifacts/
 
       - name: Publish npm package to registry
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: Clean workspace
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         run: git reset --hard
 
       - name: Push changes
-        if: ${{ env.NEEDS_REBUILD == 'true' }}
+        if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
