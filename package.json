@@ -1,7 +1,7 @@
 {
   "name": "isobus-name-resolver-ts",
   "description": "Simple tool to parse an isobus name hexstring and split it into its components.",
-  "version": "0.12.14",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "maintainers": [
     {
@@ -28,9 +28,6 @@
     "build": "npm run translate-iso-export && npm run tsc",
     "tsc": "node ./node_modules/typescript/lib/tsc.js",
     "translate-iso-export": "node ./scripts/iso-export-to-json.js"
-  },
-  "dependencies": {
-    "buffer": "^5.6.0"
   },
   "devDependencies": {
     "csv-parse": "^4.12.0",

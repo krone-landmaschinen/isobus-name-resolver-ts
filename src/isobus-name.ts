@@ -1,25 +1,22 @@
-import {Buffer} from 'buffer/';
 import * as isoData from './isoData.json';
 
 export class IsobusName {
     private readonly nameString: string;
-    private readonly dataBuffer: Buffer = Buffer.alloc(8);
+    private readonly dataBuffer: ArrayBuffer = new ArrayBuffer(8);
+    private readonly dataView = new DataView(this.dataBuffer);
 
-    constructor(isobusname: string | Buffer) {
-
-        if(Buffer.isBuffer(isobusname)) {
-            isobusname = isobusname.toString('hex');
-        } else if(typeof isobusname === 'object') {
-            throw new TypeError('parameter "isobusname" is not a valid buffer, use https://github.com/feross/buffer');
+    constructor(isobusname: string | ArrayBuffer) {
+        if(typeof isobusname !== 'string') {
+            isobusname = IsobusName.buf2hex(isobusname);
         }
-        this.nameString = isobusname;
+        this.nameString = isobusname.toUpperCase();
 
         if (this.nameString.match(new RegExp(/^[A-Fa-f0-9]+$/i)) == null || this.nameString.length !== 16) {
             throw new RangeError('Invalid ISOBUS NAME given. It must be a 64 bit number.');
         }
 
-        this.dataBuffer.writeUInt32LE(parseInt(this.nameString.substring(0, 8), 16), 4);
-        this.dataBuffer.writeUInt32LE(parseInt(this.nameString.substring(8, 16), 16), 0);
+        this.dataView.setUint32(4, parseInt(this.nameString.substring(0, 8), 16), true);
+        this.dataView.setUint32(0, parseInt(this.nameString.substring(8, 16), 16), true);
     }
 
     public toString(): string {
@@ -122,6 +119,12 @@ export class IsobusName {
     }
 
     private getByte(bytenum: number): number {
-        return this.dataBuffer.readUInt8(bytenum);
+        return this.dataView.getUint8(bytenum);
+    }
+
+    private static buf2hex(buffer: ArrayBuffer) {
+    return [...new Uint8Array(buffer)]
+      .map(x => x.toString(16).padStart(2, '0'))
+      .join('');
     }
 }
