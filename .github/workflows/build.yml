@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload .tar archive as artifact
         if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: npm-package-artifact
           path: artifacts/
