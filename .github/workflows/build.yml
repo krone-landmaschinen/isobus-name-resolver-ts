@@ -27,12 +27,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Setup environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v6
         with:
-          node-version: '12.x'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Setup git config
