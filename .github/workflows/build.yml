@@ -47,7 +47,7 @@ jobs:
         env:
           ISOBUSPARAMETER_FILENAME_FULL: "${{env.DATA_FOLDER_NAME}}/${{env.ISOBUSPARAMETER_FILENAME}}"
         id: cache-parameters
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ env.ISOBUSPARAMETER_FILENAME_FULL }}
           key: last-isobus-parameters-${{ hashFiles(env.ISOBUSPARAMETER_FILENAME_FULL) }}
