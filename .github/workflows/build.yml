@@ -47,7 +47,7 @@ jobs:
         env:
           ISOBUSPARAMETER_FILENAME_FULL: "${{env.DATA_FOLDER_NAME}}/${{env.ISOBUSPARAMETER_FILENAME}}"
         id: cache-parameters
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ env.ISOBUSPARAMETER_FILENAME_FULL }}
           key: last-isobus-parameters-${{ hashFiles(env.ISOBUSPARAMETER_FILENAME_FULL) }}
@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload .tar archive as artifact
         if: ${{ steps.cache-parameters.outputs.cache-hit != 'true' || github.event_name == 'push' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: npm-package-artifact
           path: artifacts/
