@@ -23,12 +23,16 @@ npm install isobus-name-resolver-ts
 ### Example
 
 In order to parse an ISOBUS NAME, simply instantiate an object of the class `IsobusName` with the NAME in hexadecimal
-notation or as a buffer as the only parameter
+notation or as an `ArrayBuffer` as the only parameter
 ```typescript
 import {IsobusName} from 'isobus-name-resolver-ts';
 
-const hexInput = 'A01284000DE0C3FF';
-const isobusName = new IsobusName(hexInput);
+const hexStringInput = 'A01284000DE0C3FF';
+const isobusName = new IsobusName(hexStringInput);
+
+// OR:
+// const arrayBufferInput: ArrayBuffer = new Uint8Array('A01284000DE0C3FF'.match(/../g).map(h=>parseInt(h,16))).buffer;
+// const isobusName = new IsobusName(arrayBufferInput);
 
 console.log(isobusName.toString());
 /* OUTPUT:
@@ -44,14 +48,6 @@ console.log(isobusName.toString());
  * Industry Group: Agricultural and Forestry Equipment (2)
  * Self Configurable Address: true
 */
-```
-**Attention:** this package uses the browser compatible [`buffer`](https://github.com/feross/buffer) instead of the node.js
-buffer. In order to instantiate an `IsobusName` by a `Buffer` object, this package has to be used, e.g.:
-```typescript
-// tell node js to use external package 'buffer' by adding trailing slash
-import {Buffer} from 'buffer/';
-let buf = Buffer.from("A01284000DE0C3FF", "hex");
-let isoName = new IsobusName(buf);
 ```
 
 ### API
