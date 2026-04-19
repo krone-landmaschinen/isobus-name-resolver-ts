@@ -7,7 +7,7 @@ for control and communications on forestry and agricultural machines. Every cont
 has a unique NAME (defined in ISO 11783-5) that contains information on that function, such as a manufacturer code and 
 a device class
 
-**isobus-name-resolver-ts** is a typescript library for parsing such a ISOBUS NAME and providing its seperate fields as
+**isobus-name-resolver-ts** is a typescript library for parsing such a ISOBUS NAME and providing its separate fields as
 raw values, as well as corresponding labels if available
 
 
